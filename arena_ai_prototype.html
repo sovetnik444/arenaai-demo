@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>ArenaAI — демонстрация</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f8f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .task {
+      background: #fff;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .task h2 {
+      margin-top: 0;
+    }
+    .ai-response {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-top: 1px solid #e0e0e0;
+    }
+    .ai-response:first-of-type {
+      border-top: none;
+    }
+    .ai-name {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .vote-button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .scoreboard {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .scoreboard h3 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="scoreboard">
+    <h3>Счёт</h3>
+    <ul id="scoreList">
+      <li>AI 1: <span id="score1">0</span></li>
+      <li>AI 2: <span id="score2">0</span></li>
+      <li>AI 3: <span id="score3">0</span></li>
+    </ul>
+  </div>
+  <h1>ArenaAI: Демонстрация битвы ИИ</h1>
+  <p>В каждой задаче представлены ответы трёх условных ИИ. Выберите лучшего, нажимая кнопку "Голос". Результат суммируется в общей таблице.</p>
+
+  <div class="task" id="task1">
+    <h2>Задача 1: Написать короткий рекламный слоган для нового фитнес-приложения</h2>
+    <div class="ai-response">
+      <span class="ai-name">AI 1:</span>
+      <span>«Твоя тренировка — в твоём кармане»</span>
+      <button class="vote-button" onclick="vote(1)">Голос</button>
+    </div>
+    <div class="ai-response">
+      <span class="ai-name">AI 2:</span>
+      <span>«Стань лучшей версией себя. Начни сегодня»</span>
+      <button class="vote-button" onclick="vote(2)">Голос</button>
+    </div>
+    <div class="ai-response">
+      <span class="ai-name">AI 3:</span>
+      <span>«Тренировки везде, когда тебе удобно»</span>
+      <button class="vote-button" onclick="vote(3)">Голос</button>
+    </div>
+  </div>
+
+  <div class="task" id="task2">
+    <h2>Задача 2: Придумать идею для вирусного Reels о реанимации бизнеса</h2>
+    <div class="ai-response">
+      <span class="ai-name">AI 1:</span>
+      <span>Короткий ролик «до/после»: разрушенный офис превращается в процветающий благодаря новым технологиям.</span>
+      <button class="vote-button" onclick="vote(1)">Голос</button>
+    </div>
+    <div class="ai-response">
+      <span class="ai-name">AI 2:</span>
+      <span>Скринкаст: предприниматель делает несколько ошибок, а затем идёт на консультацию и возвращается с планом действия.</span>
+      <button class="vote-button" onclick="vote(2)">Голос</button>
+    </div>
+    <div class="ai-response">
+      <span class="ai-name">AI 3:</span>
+      <span>Пародия на телешоу, где эксперт «оживляет» убыточный бизнес в прямом эфире.</span>
+      <button class="vote-button" onclick="vote(3)">Голос</button>
+    </div>
+  </div>
+
+  <div class="task" id="task3">
+    <h2>Задача 3: Придумать название для новой кофейни с минималистичным дизайном</h2>
+    <div class="ai-response">
+      <span class="ai-name">AI 1:</span>
+      <span>«Чашка & Тишина»</span>
+      <button class="vote-button" onclick="vote(1)">Голос</button>
+    </div>
+    <div class="ai-response">
+      <span class="ai-name">AI 2:</span>
+      <span>«Белый Зерно»</span>
+      <button class="vote-button" onclick="vote(2)">Голос</button>
+    </div>
+    <div class="ai-response">
+      <span class="ai-name">AI 3:</span>
+      <span>«Просто Кофе»</span>
+      <button class="vote-button" onclick="vote(3)">Голос</button>
+    </div>
+  </div>
+
+  <script>
+    // Initialise scores from localStorage or defaults
+    const scores = {
+      1: parseInt(localStorage.getItem('score1')) || 0,
+      2: parseInt(localStorage.getItem('score2')) || 0,
+      3: parseInt(localStorage.getItem('score3')) || 0,
+    };
+
+    function updateScoreboard() {
+      document.getElementById('score1').textContent = scores[1];
+      document.getElementById('score2').textContent = scores[2];
+      document.getElementById('score3').textContent = scores[3];
+    }
+
+    function vote(aiNumber) {
+      scores[aiNumber]++;
+      localStorage.setItem('score' + aiNumber, scores[aiNumber]);
+      updateScoreboard();
+    }
+
+    // Initial render
+    updateScoreboard();
+  </script>
+</body>
+</html>
