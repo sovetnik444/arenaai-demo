@@ -2,139 +2,265 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>ArenaAI — демонстрация</title>
+  <title>ArenaAI — Виртуальная битва ИИ</title>
   <style>
+    :root {
+      --primary: #0d6efd;
+      --light-bg: #f5f7fa;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --border-radius: 10px;
+      --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
     body {
-      font-family: Arial, sans-serif;
-      background: #f8f8f8;
       margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-color);
+    }
+    header {
+      padding: 40px 20px;
+      text-align: center;
+      background-image: url("https://picsum.photos/1200/400?random=1");
+      background-size: cover;
+      background-position: center;
+      color: #ffffff;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    header p {
+      font-size: 1.2em;
+      margin-top: 10px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.4;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .task-card {
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+    .task-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .task-content {
       padding: 20px;
     }
-    h1 {
-      text-align: center;
-    }
-    .task {
-      background: #fff;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      padding: 15px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .task h2 {
-      margin-top: 0;
+    .task-title {
+      margin: 0 0 10px;
+      font-size: 1.3em;
+      color: var(--primary);
     }
     .ai-response {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 8px 0;
-      border-top: 1px solid #e0e0e0;
+      border-top: 1px solid #e0e5ec;
     }
     .ai-response:first-of-type {
       border-top: none;
     }
     .ai-name {
       font-weight: bold;
-      margin-right: 10px;
+      margin-right: 8px;
     }
     .vote-button {
-      background-color: #007bff;
-      color: #fff;
+      background-color: var(--primary);
+      color: #ffffff;
       border: none;
       border-radius: 4px;
-      padding: 5px 10px;
+      padding: 5px 12px;
       cursor: pointer;
+      font-size: 0.9em;
+    }
+    .vote-button:hover {
+      background-color: #0b5ed7;
     }
     .scoreboard {
       position: fixed;
       top: 20px;
       right: 20px;
-      background: #fff;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 15px 20px;
+      z-index: 1000;
     }
     .scoreboard h3 {
-      margin-top: 0;
+      margin: 0 0 10px;
+      font-size: 1.1em;
+      color: var(--primary);
+    }
+    .scoreboard ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .scoreboard li {
+      margin-bottom: 5px;
+    }
+    @media (max-width: 600px) {
+      .ai-response {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .vote-button {
+        margin-top: 6px;
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>ArenaAI: Битва идей ИИ</h1>
+    <p>Каждый раз, когда вы обновляете страницу, появляется новая подборка задач и случайных изображений. Выберите, какое решение вам нравится больше всего, голосуйте и смотрите, кто лидирует!</p>
+  </header>
+
   <div class="scoreboard">
     <h3>Счёт</h3>
-    <ul id="scoreList">
-      <li>AI 1: <span id="score1">0</span></li>
-      <li>AI 2: <span id="score2">0</span></li>
-      <li>AI 3: <span id="score3">0</span></li>
+    <ul>
+      <li>AI 1: <span id="score1">0</span></li>
+      <li>AI 2: <span id="score2">0</span></li>
+      <li>AI 3: <span id="score3">0</span></li>
     </ul>
   </div>
-  <h1>ArenaAI: Демонстрация битвы ИИ</h1>
-  <p>В каждой задаче представлены ответы трёх условных ИИ. Выберите лучшего, нажимая кнопку "Голос". Результат суммируется в общей таблице.</p>
 
-  <div class="task" id="task1">
-    <h2>Задача 1: Написать короткий рекламный слоган для нового фитнес-приложения</h2>
-    <div class="ai-response">
-      <span class="ai-name">AI 1:</span>
-      <span>«Твоя тренировка — в твоём кармане»</span>
-      <button class="vote-button" onclick="vote(1)">Голос</button>
-    </div>
-    <div class="ai-response">
-      <span class="ai-name">AI 2:</span>
-      <span>«Стань лучшей версией себя. Начни сегодня»</span>
-      <button class="vote-button" onclick="vote(2)">Голос</button>
-    </div>
-    <div class="ai-response">
-      <span class="ai-name">AI 3:</span>
-      <span>«Тренировки везде, когда тебе удобно»</span>
-      <button class="vote-button" onclick="vote(3)">Голос</button>
-    </div>
-  </div>
-
-  <div class="task" id="task2">
-    <h2>Задача 2: Придумать идею для вирусного Reels о реанимации бизнеса</h2>
-    <div class="ai-response">
-      <span class="ai-name">AI 1:</span>
-      <span>Короткий ролик «до/после»: разрушенный офис превращается в процветающий благодаря новым технологиям.</span>
-      <button class="vote-button" onclick="vote(1)">Голос</button>
-    </div>
-    <div class="ai-response">
-      <span class="ai-name">AI 2:</span>
-      <span>Скринкаст: предприниматель делает несколько ошибок, а затем идёт на консультацию и возвращается с планом действия.</span>
-      <button class="vote-button" onclick="vote(2)">Голос</button>
-    </div>
-    <div class="ai-response">
-      <span class="ai-name">AI 3:</span>
-      <span>Пародия на телешоу, где эксперт «оживляет» убыточный бизнес в прямом эфире.</span>
-      <button class="vote-button" onclick="vote(3)">Голос</button>
-    </div>
-  </div>
-
-  <div class="task" id="task3">
-    <h2>Задача 3: Придумать название для новой кофейни с минималистичным дизайном</h2>
-    <div class="ai-response">
-      <span class="ai-name">AI 1:</span>
-      <span>«Чашка & Тишина»</span>
-      <button class="vote-button" onclick="vote(1)">Голос</button>
-    </div>
-    <div class="ai-response">
-      <span class="ai-name">AI 2:</span>
-      <span>«Белый Зерно»</span>
-      <button class="vote-button" onclick="vote(2)">Голос</button>
-    </div>
-    <div class="ai-response">
-      <span class="ai-name">AI 3:</span>
-      <span>«Просто Кофе»</span>
-      <button class="vote-button" onclick="vote(3)">Голос</button>
-    </div>
+  <div class="container" id="tasksContainer">
+    <!-- Tasks will be injected here by JavaScript -->
   </div>
 
   <script>
-    // Initialise scores from localStorage or defaults
+    // Предопределённые задачи с вариантами ответов и случайными изображениями
+    const allTasks = [
+      {
+        title: 'Придумать слоган для экобренда бытовой химии',
+        responses: [
+          '«Чистота без компромиссов: природа в каждой капле»',
+          '«Сияющая чистота, зеленая планета»',
+          '«Бережно к дому, нежно к планете»'
+        ],
+        image: 'https://picsum.photos/800/200?random=21'
+      },
+      {
+        title: 'Идея статьи о продуктивности в удалённой работе',
+        responses: [
+          'Пять методик тайм‑менеджмента, которые действительно работают',
+          'Оптимизация домашнего рабочего места: лайфхаки и вдохновение',
+          'Как избегать прокрастинации и находить баланс между работой и отдыхом'
+        ],
+        image: 'https://picsum.photos/800/200?random=22'
+      },
+      {
+        title: 'Назвать новую кофейню в скандинавском стиле',
+        responses: [
+          '«Северное Зерно»',
+          '«Холодное Утро»',
+          '«Лесная Тишина»'
+        ],
+        image: 'https://picsum.photos/800/200?random=23'
+      },
+      {
+        title: 'Создать вирусный Reels про путешествия',
+        responses: [
+          'Серия коротких кадров: от планирования до незабываемого заката',
+          'Микс «ожидание vs. реальность» в разных странах',
+          'Советы по бюджетным поездкам, дополненные яркими пейзажами'
+        ],
+        image: 'https://picsum.photos/800/200?random=24'
+      },
+      {
+        title: 'Слоган для приложения‑помощника по саморазвитию',
+        responses: [
+          '«Лучшее «я» начинается здесь»',
+          '«Раскрой свой потенциал. Каждый день»',
+          '«Твои цели — наша миссия»'
+        ],
+        image: 'https://picsum.photos/800/200?random=25'
+      },
+      {
+        title: 'Идея подарка на корпоратив для IT‑компании',
+        responses: [
+          'Персонализированная цифровая рамка с достижениями года',
+          'Набор фирменных гаджетов: зарядка, наушники, флешка',
+          'Совместное посадочное дерево с сертификатом для каждого сотрудника'
+        ],
+        image: 'https://picsum.photos/800/200?random=26'
+      }
+    ];
+
+    // Загрузка счёта из localStorage
     const scores = {
       1: parseInt(localStorage.getItem('score1')) || 0,
       2: parseInt(localStorage.getItem('score2')) || 0,
       3: parseInt(localStorage.getItem('score3')) || 0,
     };
+
+    // Перемешивание массива задач
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function renderTasks() {
+      const tasksContainer = document.getElementById('tasksContainer');
+      tasksContainer.innerHTML = '';
+      // Выбираем первые три задачи после перемешивания
+      const selected = shuffle(allTasks.slice()).slice(0, 3);
+      selected.forEach((task, taskIndex) => {
+        const card = document.createElement('div');
+        card.className = 'task-card';
+        const img = document.createElement('img');
+        img.className = 'task-image';
+        img.src = task.image;
+        img.alt = '';
+        const content = document.createElement('div');
+        content.className = 'task-content';
+        const title = document.createElement('h2');
+        title.className = 'task-title';
+        title.textContent = `Задача ${taskIndex + 1}: ${task.title}`;
+        content.appendChild(title);
+        // Добавляем варианты ответов
+        task.responses.forEach((response, idx) => {
+          const respDiv = document.createElement('div');
+          respDiv.className = 'ai-response';
+          const nameSpan = document.createElement('span');
+          nameSpan.className = 'ai-name';
+          nameSpan.textContent = `AI ${idx + 1}:`;
+          const textSpan = document.createElement('span');
+          textSpan.textContent = response;
+          const btn = document.createElement('button');
+          btn.className = 'vote-button';
+          btn.textContent = 'Голос';
+          btn.onclick = () => vote(idx + 1);
+          respDiv.appendChild(nameSpan);
+          respDiv.appendChild(textSpan);
+          respDiv.appendChild(btn);
+          content.appendChild(respDiv);
+        });
+        card.appendChild(img);
+        card.appendChild(content);
+        tasksContainer.appendChild(card);
+      });
+    }
 
     function updateScoreboard() {
       document.getElementById('score1').textContent = scores[1];
@@ -148,7 +274,8 @@
       updateScoreboard();
     }
 
-    // Initial render
+    // Первичная инициализация
+    renderTasks();
     updateScoreboard();
   </script>
 </body>
